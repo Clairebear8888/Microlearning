@@ -197,21 +197,26 @@ function LessonsPage() {
             ))}
           </div>
 
-          <div className="lesson-actions">
-            <button
-              onClick={() => handleEdit(currentLesson)}
-              className="edit-btn"
-            >
-              ✏️ Edit
-            </button>
+          {completedLessons.has(currentIndex) && (
+            <div className="completed-badge">✓ Lesson completed</div>
+          )}
+        </div>
+        {/* button session  */}
 
-            <button
-              onClick={() => handleDelete(currentLesson._id)}
-              className="delete-btn"
-            >
-              🗑️ Delete
-            </button>
-          </div>
+        <div className="lesson-actions">
+          <button
+            onClick={() => handleEdit(currentLesson)}
+            className="edit-btn"
+          >
+            ✏️ Edit
+          </button>
+
+          <button
+            onClick={() => handleDelete(currentLesson._id)}
+            className="delete-btn"
+          >
+            🗑️ Delete
+          </button>
 
           {isEditing && (
             <div className="edit-form">
@@ -259,10 +264,6 @@ function LessonsPage() {
                 </button>
               </div>
             </div>
-          )}
-
-          {completedLessons.has(currentIndex) && (
-            <div className="completed-badge">✓ Lesson completed</div>
           )}
         </div>
 
