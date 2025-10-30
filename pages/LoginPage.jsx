@@ -30,34 +30,37 @@ const LoginPage = () => {
   }
 
   return (
-    <div>
-      <h2>Login now</h2>
+    <div className="signup-page">
+      <div className="auth-header">
+        <h2>Login now</h2>
+      </div>
+      <div className="auth-container">
+        <form onSubmit={handleLogin} className="auth-form">
+          <label className="form-label">
+            Email:
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+          </label>
 
-      <form onSubmit={handleLogin}>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-        </label>
-
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-        </label>
-        <button>Log in</button>
-        {error && <p className="error">{error}</p>}
-      </form>
+          <label className="form-label">
+            Password:
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+          </label>
+          <button>Log in</button>
+          {error && <p className="error">{error}</p>}
+        </form>
+      </div>
     </div>
   );
 };

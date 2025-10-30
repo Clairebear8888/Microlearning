@@ -29,44 +29,48 @@ const SignupPage = () => {
   }
 
   return (
-    <div>
-      <h2>Signup with us </h2>
-      <form onSubmit={handleSignup}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-          />
-        </label>
+    <div className="signup-page">
+      <div className="auth-header">
+        <h2> Start your learning journey with DoomsLearning </h2>
+      </div>
+      <div className="auth-container">
+        <form onSubmit={handleSignup} className="auth-form">
+          <label className="form-label">
+            Username:
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+          </label>
 
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-        </label>
+          <label className="form-label">
+            Email:
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+          </label>
 
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-        </label>
-        <button>Sign up</button>
-        {error && <p className="error">{error}</p>}
-      </form>
+          <label className="form-label">
+            Password:
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+          </label>
+          <button>Sign up</button>
+          {error && <p className="error">{error}</p>}
+        </form>
+      </div>
       <p>already a member ? </p>
       <Link to="/login">Login</Link>
     </div>

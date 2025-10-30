@@ -856,7 +856,14 @@ button:disabled {
   box-shadow: var(--shadow);
   transition: transform 0.2s;
 }
-
+.stat-card .stat-label {
+  color: #64748b !important;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
 .stat-card:active {
   transform: scale(0.98);
 }
@@ -882,17 +889,8 @@ button:disabled {
 .stat-number {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--gray-900);
+  color: #0f172a !important;
   margin-bottom: 0.25rem;
-}
-
-.stat-label {
-  color: var(--gray-700); /* Darker - was gray-600 */
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-  margin-top: 0.25rem;
 }
 
 .score-section {
@@ -1187,6 +1185,7 @@ button:disabled {
    ======================================== */
 .loading-spinner {
   font-size: 2.5rem;
+  width: 15vh;
   animation: spin 1s linear infinite;
 }
 
@@ -1533,13 +1532,6 @@ PRINT STYLES
   font-weight: 700;
   color: white;
   margin-bottom: 0.25rem;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.8);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .stat-divider {
@@ -2191,4 +2183,39 @@ PRINT STYLES
     left: 50%;
     transform: translate(-50%, -50%) rotate(180deg);
   }
+}
+
+/* ========================================
+   AUTH PAGES (Signup/Login)
+   ======================================== */
+
+.auth-container {
+  min-height: 45vh;
+  background: var(--gradient);
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: white;
+  font-size: 0.875rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.signup-page {
+  padding: 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-header {
+  padding: 2rem 2rem;
 }

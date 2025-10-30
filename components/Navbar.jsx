@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Navbar = () => {
   const { handleLogOut, isLoggedIn, currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  console.log("current user", currentUser);
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -16,7 +16,7 @@ const Navbar = () => {
             alt="MicroLearn"
             className="brand-logo-img"
           />
-          <span className="brand-name">MicroLearn</span>
+          <span className="brand-name"> DoomsLearning</span>
         </Link>
 
         {/* Navigation Links */}

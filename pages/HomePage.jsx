@@ -13,8 +13,8 @@ const HomePage = () => {
         <div className="hero-content">
           <div className="hero-badge">🚀 AI-Powered Learning</div>
           <h1 className="hero-title">
-            Master Any Topic in
-            <span className="gradient-text"> Minutes</span>
+            Use your spare time to get better at any
+            <span className="gradient-text"> topics</span>
           </h1>
           <p className="hero-subtitle">
             Generate personalized bite-sized lessons on any subject with AI.

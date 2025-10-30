@@ -13,12 +13,6 @@ function QuizPage() {
   const topic = location.state?.topic || decodeURIComponent(topicParam);
   const lessonIdsFromState = location.state?.lessonIds;
 
-  console.log(" QuizPage mounted:");
-  console.log("   - topicParam:", topicParam);
-  console.log("   - location.state?.topic:", location.state?.topic);
-  console.log("   - final topic:", topic);
-  console.log("   - lessonIds from state:", lessonIdsFromState);
-
   const [quiz, setQuiz] = useState(null);
   const [userAnswers, setUserAnswers] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -50,12 +44,6 @@ function QuizPage() {
         lessonIds = topicLessons.map((l) => l._id);
         console.log(" Fetched lesson IDs:", lessonIds);
       }
-
-      // Debug what we're sending
-      console.log(" FRONTEND SENDING:");
-      console.log("   - Topic:", topic);
-      console.log("   - Topic type:", typeof topic);
-      console.log("   - LessonIds:", lessonIds);
 
       const requestBody = {
         topic: topic,
@@ -131,7 +119,8 @@ function QuizPage() {
   if (loading) {
     return (
       <div className="loading-container">
-        <div className="loading-spinner">🔄</div>
+        <img src="/src/assets/Samlogo.png" className="loading-spinner" />
+
         <p>Generating your quiz...</p>
         <p className="loading-note">(This may take 10-15 seconds)</p>
       </div>
@@ -142,7 +131,7 @@ function QuizPage() {
     return (
       <div className="error-container">
         <div className="error-card">
-          <h2>❌ Error</h2>
+          <h2> Error</h2>
           <p>{error}</p>
           <div className="error-actions">
             <button onClick={generateQuiz} className="retry-btn">
@@ -161,7 +150,7 @@ function QuizPage() {
     return (
       <div className="error-container">
         <div className="error-card">
-          <h2>❌ Quiz Not Found</h2>
+          <h2> Quiz Not Found</h2>
           <button onClick={() => navigate("/topics")} className="back-btn">
             ← Back to Topics
           </button>
