@@ -16,6 +16,12 @@ function LessonsPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    subtopic: "",
+    summary: "",
+    bulletPoints: [],
+  });
 
   useEffect(() => {
     if (location.state?.lessons) {
@@ -86,6 +92,57 @@ function LessonsPage() {
     });
   };
 
+  const handleEdit = (lesson) => {
+    setIsEditing(true);
+    setEditForm({
+      subtopic: lesson.subtopic,
+      summary: lesson.summary,
+      bulletPoints: lesson.bulletPoints,
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    const token = localStorage.getItem("authToken");
+    const lessonId = lessons[currentIndex]._id;
+
+    try {
+      const response = await axios.put(
+        `${API_URL}/lesson/${lessonId}`,
+        editForm,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // update local state
+      const updatedLesson = response.data;
+      const updatedLessons = [...lessons];
+      updatedLessons[currentIndex] = updatedLesson;
+      setLessons(updatedLessons);
+      setIsEditing(false);
+
+      console.log("✅ Lesson updated successfully");
+    } catch (err) {
+      console.error("❌ Error updating lesson:", err);
+    }
+  };
+
+  const handleDelete = async (lessonId) => {
+    if (!window.confirm("Are you sure you want to delete this lesson?")) return;
+
+    const token = localStorage.getItem("authToken");
+    try {
+      await axios.delete(`${API_URL}/lesson/${lessonId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const remaining = lessons.filter((l) => l._id !== lessonId);
+      setLessons(remaining);
+      setCurrentIndex(0);
+      console.log("🗑️ Lesson deleted successfully");
+    } catch (err) {
+      console.error("❌ Error deleting lesson:", err);
+    }
+  };
+
   const allCompleted = completedLessons.size === lessons.length;
   const currentLesson = lessons[currentIndex];
   const isLastLesson = currentIndex === lessons.length - 1;
@@ -139,6 +196,70 @@ function LessonsPage() {
               </div>
             ))}
           </div>
+
+          <div className="lesson-actions">
+            <button
+              onClick={() => handleEdit(currentLesson)}
+              className="edit-btn"
+            >
+              ✏️ Edit
+            </button>
+
+            <button
+              onClick={() => handleDelete(currentLesson._id)}
+              className="delete-btn"
+            >
+              🗑️ Delete
+            </button>
+          </div>
+
+          {isEditing && (
+            <div className="edit-form">
+              <h3>Edit Lesson</h3>
+
+              <input
+                type="text"
+                value={editForm.subtopic}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, subtopic: e.target.value })
+                }
+                placeholder="Subtopic title"
+              />
+
+              <textarea
+                value={editForm.summary}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, summary: e.target.value })
+                }
+                placeholder="Lesson summary"
+              />
+
+              {editForm.bulletPoints.map((point, idx) => (
+                <input
+                  key={idx}
+                  type="text"
+                  value={point}
+                  onChange={(e) => {
+                    const updated = [...editForm.bulletPoints];
+                    updated[idx] = e.target.value;
+                    setEditForm({ ...editForm, bulletPoints: updated });
+                  }}
+                />
+              ))}
+
+              <div className="edit-buttons">
+                <button onClick={handleSaveEdit} className="save-btn">
+                  💾 Save
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="cancel-btn"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
 
           {completedLessons.has(currentIndex) && (
             <div className="completed-badge">✓ Lesson completed</div>
