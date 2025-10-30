@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
+import { API_URL } from "../src/config/api.config";
 
 function QuizPage() {
   const { topic: topicParam } = useParams();
@@ -33,10 +34,9 @@ function QuizPage() {
       // If no lessonIds in state, fetch them
       if (!lessonIds || lessonIds.length === 0) {
         console.log(" No lesson IDs in state, fetching...");
-        const lessonsResponse = await axios.get(
-          "http://localhost:5005/lesson/alllesson",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const lessonsResponse = await axios.get(`${API_URL}/lesson/alllesson`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         const topicLessons = lessonsResponse.data.filter(
           (l) => l.topic === topic
@@ -54,7 +54,7 @@ function QuizPage() {
 
       // Generate quiz
       const quizResponse = await axios.post(
-        "http://localhost:5005/quiz/generate",
+        `${API_URL}/quiz/generate`,
         requestBody,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -90,7 +90,8 @@ function QuizPage() {
     try {
       const token = localStorage.getItem("authToken");
       const response = await axios.post(
-        `http://localhost:5005/quiz/submit/${quiz._id}`,
+        `${API_URL}/quiz/submit/${quiz._id}`,
+
         { answers: userAnswers },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -100,7 +101,7 @@ function QuizPage() {
 
       // Update progress
       await axios.post(
-        "http://localhost:5005/progress/quiz-complete",
+        `${API_URL}/progress/quiz-complete`,
         {
           quizId: quiz._id,
           topic: topic,

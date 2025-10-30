@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
+import { API_URL } from "../src/config/api.config";
 
 function LessonsPage() {
   const { topic: topicParam } = useParams();
@@ -27,10 +28,9 @@ function LessonsPage() {
   const fetchLessons = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios.get(
-        "http://localhost:5005/lesson/alllesson",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await axios.get(`${API_URL}/lesson/alllesson`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const topicLessons = response.data.filter((l) => l.topic === topic);
       setLessons(topicLessons);
@@ -46,7 +46,7 @@ function LessonsPage() {
     try {
       const token = localStorage.getItem("authToken");
       await axios.post(
-        "http://localhost:5005/progress/lesson-complete",
+        `${API_URL}/progress/lesson-complete`,
         {
           lessonId: currentLesson._id,
           topic: topic,
@@ -91,7 +91,7 @@ function LessonsPage() {
   const isLastLesson = currentIndex === lessons.length - 1;
 
   // Debug logs
-  console.log("📊 Debug Info:");
+  console.log("Debug Info:");
   console.log("   Current Index:", currentIndex);
   console.log("   Total Lessons:", lessons.length);
   console.log("   Is Last Lesson:", isLastLesson);

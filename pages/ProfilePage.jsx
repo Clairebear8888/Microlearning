@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../src/config/api.config";
 
 const ProfilePage = () => {
   const { currentUser } = useContext(AuthContext);
@@ -21,21 +22,21 @@ const ProfilePage = () => {
 
       // Fetch user profile
       const profileResponse = await axios.get(
-        `http://localhost:5005/auth/profile/${currentUser._id}`,
+        `${API_URL}/auth/profile/${currentUser._id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setProfileUser(profileResponse.data);
 
       // Fetch progress data
       const progressResponse = await axios.get(
-        `http://localhost:5005/progress/${currentUser._id}`,
+        `${API_URL}/progress/${currentUser._id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setProgress(progressResponse.data);
 
       // Fetch quiz history
       const quizzesResponse = await axios.get(
-        `http://localhost:5005/quiz/user/${currentUser._id}`,
+        `${API_URL}/quiz/user/${currentUser._id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setQuizzes(quizzesResponse.data);

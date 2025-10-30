@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../src/config/api.config";
 
 const TopicsPage = () => {
   const [topic, setTopic] = useState("");
@@ -18,7 +19,7 @@ const TopicsPage = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await axios.post(
-        "http://localhost:5005/lesson/generate",
+        `${API_URL}/lesson/generate`,
         { topic: topic.trim() },
         { headers: { Authorization: `Bearer ${token}` } }
       );

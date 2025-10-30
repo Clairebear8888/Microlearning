@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
+import { API_URL } from "../src/config/api.config";
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
@@ -17,7 +18,7 @@ const SignupPage = () => {
     const UserToCreate = { username, email, password };
     try {
       const createdUser = await axios.post(
-        "http://localhost:5005/auth/signup",
+        `${API_URL}/auth/signup`,
         UserToCreate
       );
       console.log("user signup!", createdUser);
