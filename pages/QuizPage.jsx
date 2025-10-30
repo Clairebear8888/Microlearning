@@ -3,6 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { API_URL } from "../src/config/api.config";
+import sam from "../src/assets/Samlogo.png";
 
 function QuizPage() {
   const { topic: topicParam } = useParams();
@@ -120,7 +121,7 @@ function QuizPage() {
   if (loading) {
     return (
       <div className="loading-container">
-        <img src="/src/assets/Samlogo.png" className="loading-spinner" />
+        <img src={sam} className="loading-spinner" />
 
         <p>Generating your quiz...</p>
         <p className="loading-note">(This may take 10-15 seconds)</p>
