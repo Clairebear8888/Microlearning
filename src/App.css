@@ -2354,3 +2354,419 @@ PRINT STYLES
     width: 100%;
   }
 }
+
+/* ========================================
+   PROFILE PAGE - EDIT LESSONS MODAL
+   ======================================== */
+
+/* Topic Actions Buttons */
+.topic-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.edit-lessons-btn {
+  padding: 0.625rem 1rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-lessons-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--gray-200);
+  background: var(--gray-50);
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--gray-200);
+  color: var(--gray-700);
+  border-radius: 50%;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--error);
+  color: white;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.empty-lessons {
+  text-align: center;
+  color: var(--gray-600);
+  padding: 2rem;
+}
+
+/* Lessons Edit List */
+.lessons-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lesson-edit-item {
+  background: var(--gray-50);
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+/* Lesson View Mode */
+.lesson-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lesson-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.lesson-view-header h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+  flex: 1;
+}
+
+.lesson-view-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-btn-small,
+.delete-btn-small {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-btn-small {
+  background: var(--primary);
+  color: white;
+}
+
+.edit-btn-small:hover {
+  background: var(--primary-dark);
+}
+
+.delete-btn-small {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.delete-btn-small:hover {
+  background: var(--error);
+  color: white;
+  border-color: var(--error);
+}
+
+.lesson-view-summary {
+  color: var(--gray-700);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.lesson-view-points {
+  color: var(--gray-700);
+}
+
+.lesson-view-points strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gray-900);
+}
+
+.lesson-view-points ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.lesson-view-points li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+/* Lesson Edit Form */
+.lesson-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lesson-edit-form h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 1rem 0;
+}
+
+.lesson-edit-form label {
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.lesson-edit-form input,
+.lesson-edit-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.lesson-edit-form input:focus,
+.lesson-edit-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.lesson-edit-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Bullet Point Editing */
+.bullet-edit {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.bullet-edit input {
+  flex: 1;
+  margin: 0;
+}
+
+.remove-bullet-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.remove-bullet-btn:hover {
+  background: var(--error);
+  color: white;
+  border-color: var(--error);
+}
+
+.add-bullet-btn {
+  padding: 0.625rem 1rem;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+
+.add-bullet-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Edit Form Actions */
+.edit-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.edit-form-actions .save-btn,
+.edit-form-actions .cancel-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-form-actions .save-btn {
+  background: var(--success);
+  color: white;
+}
+
+.edit-form-actions .save-btn:hover {
+  background: var(--success-dark);
+}
+
+.edit-form-actions .cancel-btn {
+  background: var(--gray-200);
+  color: var(--gray-700);
+}
+
+.edit-form-actions .cancel-btn:hover {
+  background: var(--gray-300);
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE
+   ======================================== */
+@media (max-width: 640px) {
+  .modal-content {
+    max-height: 95vh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .lesson-edit-item {
+    padding: 1rem;
+  }
+
+  .lesson-view-header {
+    flex-direction: column;
+  }
+
+  .lesson-view-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .topic-actions {
+    flex-direction: column;
+  }
+
+  .review-btn,
+  .edit-lessons-btn {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   RESPONSIVE - TABLET AND UP
+   ======================================== */
+@media (min-width: 641px) {
+  .modal-header {
+    padding: 2rem;
+  }
+
+  .modal-body {
+    padding: 2rem;
+  }
+
+  .lesson-edit-item {
+    padding: 2rem;
+  }
+}

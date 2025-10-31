@@ -12,6 +12,17 @@ const ProfilePage = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Edit lesson states
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [topicLessons, setTopicLessons] = useState([]);
+  const [editingLesson, setEditingLesson] = useState(null);
+  const [editForm, setEditForm] = useState({
+    subtopic: "",
+    summary: "",
+    bulletPoints: [],
+  });
+
   useEffect(() => {
     fetchAllData();
   }, [currentUser]);
@@ -49,6 +60,113 @@ const ProfilePage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Fetch lessons for a specific topic
+  const fetchTopicLessons = async (topic) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await axios.get(`${API_URL}/lesson/alllesson`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const topicLessons = response.data.filter((l) => l.topic === topic);
+      setTopicLessons(topicLessons);
+      setSelectedTopic(topic);
+      setShowEditModal(true);
+    } catch (err) {
+      console.error("Error fetching lessons:", err);
+    }
+  };
+
+  // Start editing a lesson
+  const handleStartEdit = (lesson) => {
+    setEditingLesson(lesson._id);
+    setEditForm({
+      subtopic: lesson.subtopic,
+      summary: lesson.summary,
+      bulletPoints: [...lesson.bulletPoints],
+    });
+  };
+
+  // Save edited lesson
+  const handleSaveEdit = async (lessonId) => {
+    const token = localStorage.getItem("authToken");
+
+    try {
+      const response = await axios.put(
+        `${API_URL}/lesson/${lessonId}`,
+        editForm,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Update local state
+      const updatedLessons = topicLessons.map((lesson) =>
+        lesson._id === lessonId ? response.data : lesson
+      );
+      setTopicLessons(updatedLessons);
+      setEditingLesson(null);
+
+      console.log("✅ Lesson updated successfully");
+    } catch (err) {
+      console.error("❌ Error updating lesson:", err);
+    }
+  };
+
+  // Delete lesson
+  const handleDeleteLesson = async (lessonId) => {
+    if (!window.confirm("Are you sure you want to delete this lesson?")) return;
+
+    const token = localStorage.getItem("authToken");
+    try {
+      await axios.delete(`${API_URL}/lesson/${lessonId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const remaining = topicLessons.filter((l) => l._id !== lessonId);
+      setTopicLessons(remaining);
+
+      console.log("🗑️ Lesson deleted successfully");
+
+      // If no lessons left, close modal
+      if (remaining.length === 0) {
+        setShowEditModal(false);
+        fetchAllData(); // Refresh progress data
+      }
+    } catch (err) {
+      console.error("❌ Error deleting lesson:", err);
+    }
+  };
+
+  // Cancel editing
+  const handleCancelEdit = () => {
+    setEditingLesson(null);
+    setEditForm({
+      subtopic: "",
+      summary: "",
+      bulletPoints: [],
+    });
+  };
+
+  // Update bullet point
+  const updateBulletPoint = (index, value) => {
+    const updated = [...editForm.bulletPoints];
+    updated[index] = value;
+    setEditForm({ ...editForm, bulletPoints: updated });
+  };
+
+  // Add bullet point
+  const addBulletPoint = () => {
+    setEditForm({
+      ...editForm,
+      bulletPoints: [...editForm.bulletPoints, ""],
+    });
+  };
+
+  // Remove bullet point
+  const removeBulletPoint = (index) => {
+    const updated = editForm.bulletPoints.filter((_, i) => i !== index);
+    setEditForm({ ...editForm, bulletPoints: updated });
   };
 
   const formatDate = (dateString) => {
@@ -186,14 +304,22 @@ const ProfilePage = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() =>
-                      navigate(`/lessons/${encodeURIComponent(item.topic)}`)
-                    }
-                    className="review-btn"
-                  >
-                    Review Topic
-                  </button>
+                  <div className="topic-actions">
+                    <button
+                      onClick={() =>
+                        navigate(`/lessons/${encodeURIComponent(item.topic)}`)
+                      }
+                      className="review-btn"
+                    >
+                      Review Topic
+                    </button>
+                    <button
+                      onClick={() => fetchTopicLessons(item.topic)}
+                      className="edit-lessons-btn"
+                    >
+                      ✏️ Edit Lessons
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -232,6 +358,148 @@ const ProfilePage = () => {
           </button>
         </div>
       </div>
+
+      {/* Edit Lessons Modal */}
+      {showEditModal && (
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Edit Lessons: {selectedTopic}</h2>
+              <button
+                className="modal-close"
+                onClick={() => setShowEditModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="modal-body">
+              {topicLessons.length === 0 ? (
+                <p className="empty-lessons">
+                  No lessons found for this topic.
+                </p>
+              ) : (
+                <div className="lessons-edit-list">
+                  {topicLessons.map((lesson, idx) => (
+                    <div key={lesson._id} className="lesson-edit-item">
+                      {editingLesson === lesson._id ? (
+                        // EDIT MODE
+                        <div className="lesson-edit-form">
+                          <h3>Editing Lesson {idx + 1}</h3>
+
+                          <label>Subtopic Title:</label>
+                          <input
+                            type="text"
+                            value={editForm.subtopic}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                subtopic: e.target.value,
+                              })
+                            }
+                            placeholder="Subtopic title"
+                          />
+
+                          <label>Summary:</label>
+                          <textarea
+                            value={editForm.summary}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                summary: e.target.value,
+                              })
+                            }
+                            placeholder="Lesson summary"
+                            rows="4"
+                          />
+
+                          <label>Key Points:</label>
+                          {editForm.bulletPoints.map((point, pointIdx) => (
+                            <div key={pointIdx} className="bullet-edit">
+                              <input
+                                type="text"
+                                value={point}
+                                onChange={(e) =>
+                                  updateBulletPoint(pointIdx, e.target.value)
+                                }
+                                placeholder={`Point ${pointIdx + 1}`}
+                              />
+                              <button
+                                onClick={() => removeBulletPoint(pointIdx)}
+                                className="remove-bullet-btn"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+
+                          <button
+                            onClick={addBulletPoint}
+                            className="add-bullet-btn"
+                          >
+                            + Add Point
+                          </button>
+
+                          <div className="edit-form-actions">
+                            <button
+                              onClick={() => handleSaveEdit(lesson._id)}
+                              className="save-btn"
+                            >
+                              💾 Save Changes
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="cancel-btn"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        // VIEW MODE
+                        <div className="lesson-view">
+                          <div className="lesson-view-header">
+                            <h3>
+                              Lesson {idx + 1}: {lesson.subtopic}
+                            </h3>
+                            <div className="lesson-view-actions">
+                              <button
+                                onClick={() => handleStartEdit(lesson)}
+                                className="edit-btn-small"
+                              >
+                                ✏️ Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteLesson(lesson._id)}
+                                className="delete-btn-small"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </div>
+
+                          <p className="lesson-view-summary">
+                            {lesson.summary}
+                          </p>
+
+                          <div className="lesson-view-points">
+                            <strong>Key Points:</strong>
+                            <ul>
+                              {lesson.bulletPoints.map((point, pointIdx) => (
+                                <li key={pointIdx}>{point}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
